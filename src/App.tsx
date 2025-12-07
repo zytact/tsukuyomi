@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import './App.css';
 
 interface ChromeTab {
@@ -193,8 +193,9 @@ function App() {
         return colors[color] || 'bg-gray-500';
     };
 
-    const { grouped, ungrouped } = getGroupedTabs();
+    const { grouped, ungrouped } = useMemo(() => getGroupedTabs(), [tabs]);
     const groupIds = Object.keys(grouped).map(Number);
+    const tabIndexMap = new Map(tabs.map((tab, idx) => [tab.id, idx]));
 
     return (
         <div className="App">
@@ -250,7 +251,8 @@ function App() {
                                 </div>
                                 <ul className="list-none p-0">
                                     {groupTabs.map((tab) => {
-                                        const globalIndex = tabs.indexOf(tab);
+                                        const globalIndex =
+                                            tabIndexMap.get(tab.id) ?? -1;
                                         return (
                                             <li
                                                 key={tab.id || tab.url}
@@ -298,7 +300,8 @@ function App() {
                             </div>
                             <ul className="list-none p-0">
                                 {ungrouped.map((tab) => {
-                                    const globalIndex = tabs.indexOf(tab);
+                                    const globalIndex =
+                                        tabIndexMap.get(tab.id) ?? -1;
                                     return (
                                         <li
                                             key={tab.id || tab.url}
