@@ -7,7 +7,7 @@
         "48": "favicon-48x48.png",
         "128": "favicon-128x128.png"
     },
-    "permissions": ["tabs"],
+    "permissions": ["tabs", "tabGroups"],
     "action": {
         "default_popup": "index.html"
     },
