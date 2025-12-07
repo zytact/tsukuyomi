@@ -225,6 +225,7 @@ function App() {
                                     <div className="flex items-center gap-2">
                                         <div
                                             className={`size-3 rounded-full ${group ? getGroupColor(group.color) : 'bg-gray-500'}`}
+                                            aria-label={`Group color: ${group?.color || 'grey'}`}
                                         ></div>
                                         <span className="font-semibold">
                                             {group?.title || `Group ${groupId}`}
