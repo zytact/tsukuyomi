@@ -28,7 +28,9 @@ function App() {
     // Cross-browser API detection
     const isFirefox = typeof (globalThis as any).browser !== 'undefined';
     const tabsAPI = isFirefox ? (globalThis as any).browser.tabs : chrome.tabs;
-    const tabGroupsAPI = !isFirefox ? (chrome as any).tabGroups : undefined;
+    const tabGroupsAPI = isFirefox
+        ? (globalThis as any).browser.tabGroups
+        : (chrome as any).tabGroups;
     const runtimeAPI = isFirefox
         ? (globalThis as any).browser.runtime
         : chrome.runtime;
@@ -45,6 +47,19 @@ function App() {
                     setError(`Error fetching tabs: ${error.message}`);
                     setTabs([]);
                 });
+
+            if (tabGroupsAPI) {
+                tabGroupsAPI
+                    .query({})
+                    .then((groups: ChromeTabGroup[]) => {
+                        setTabGroups(groups);
+                    })
+                    .catch((error: Error) => {
+                        console.error(
+                            `Error fetching tab groups: ${error.message}`
+                        );
+                    });
+            }
         } else {
             tabsAPI.query({}, (loadedTabs: ChromeTab[]) => {
                 if (runtimeAPI.lastError) {
